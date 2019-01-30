@@ -115,6 +115,12 @@ void AppClass::ProcessKeyboard(sf::Event a_event)
 		m_v3Color = glm::vec3(0.0f, 0.0f, 1.0f);
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num0))
 		m_v3Color = glm::vec3(-1.0f, -1.0f, -1.0f);
+
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4))
+	{
+		colorFlag = !(colorFlag);
+		std::cout << "colorFlag is "<<colorFlag<<"\n";
+	}
 }
 void AppClass::Display(void)
 {
@@ -123,7 +129,12 @@ void AppClass::Display(void)
 
 	//read uniforms and send values
 	GLuint SolidColor = glGetUniformLocation(m_uShaderProgramID, "SolidColor");
+
+	//sending color flag
+	GLuint COLOR_FLAG = glGetUniformLocation(m_uShaderProgramID, "flagColor");
 	glUniform3f(SolidColor, m_v3Color.r, m_v3Color.g, m_v3Color.b);
+	if (COLOR_FLAG != -1)
+		glUniform1f(COLOR_FLAG,colorFlag);
 
 	//draw content
 	glDrawArrays(GL_TRIANGLES, 0, 3);
