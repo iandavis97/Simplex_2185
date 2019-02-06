@@ -1,5 +1,5 @@
 /*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
+Programmer: Ian Davis (icd9008@rit.edu)
 Date: 2017/05
 ----------------------------------------------*/
 #ifndef __MYMESH_H_

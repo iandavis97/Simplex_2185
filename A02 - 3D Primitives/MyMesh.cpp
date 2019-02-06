@@ -275,9 +275,34 @@ void MyMesh::GenerateCone(float a_fRadius, float a_fHeight, int a_nSubdivisions,
 	Release();
 	Init();
 
-	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
-	// -------------------------------
+	vector3 point1 = vector3(0.0f, 0.0f, 0.0f);
+	vector3 point2;
+	vector3 point3;
+	vector3 point4=vector3(point1.x,point1.y,point1.z+a_fHeight);//tip of cone
+	float step = 2.0*PI / a_nSubdivisions;
+
+	for (float angle = 0.0f; angle < 2.0f*PI; angle += step)
+	{
+		point2.x = point1.x + (a_fRadius*sinf(angle));
+		point2.y = point1.y + (a_fRadius * cosf(angle));
+		angle += step;
+		point3.x = point1.x + (a_fRadius * sinf(angle));
+		point3.y = point1.y + (a_fRadius * cosf(angle));
+		angle -= step;
+		AddTri(point2, point3, point1);
+	}
+
+	//loop for cone tip
+	for (float angle = 0.0f; angle < 2.0f*PI; angle += step)
+	{
+		point2.x = point4.x + (a_fRadius*sinf(angle));
+		point2.y = point4.y + (a_fRadius * cosf(angle));
+		angle += step;
+		point3.x = point4.x + (a_fRadius * sinf(angle));
+		point3.y = point4.y + (a_fRadius * cosf(angle));
+		angle -= step;
+		AddTri(point3, point2, point4);
+	}
 
 	// Adding information about color
 	CompleteMesh(a_v3Color);
@@ -299,9 +324,58 @@ void MyMesh::GenerateCylinder(float a_fRadius, float a_fHeight, int a_nSubdivisi
 	Release();
 	Init();
 
-	// Replace this with your code
-	GenerateCube(a_fRadius * 2.0f, a_v3Color);
-	// -------------------------------
+	vector3 point1 = vector3(0.0f, 0.0f, 0.0f);
+	vector3 point2;
+	vector3 point3;
+	vector3 point4 = vector3(0.0f,0.0f,point1.z+a_fHeight);//will be center of other circular base
+
+	float step = 2.0f*PI / a_nSubdivisions;
+
+	//loop for first circle base
+	for (float angle = 0.0f; angle < 2.0f*PI; angle += step)
+	{
+		point2.x = point1.x + (a_fRadius*sinf(angle));
+		point2.y = point1.y + (a_fRadius * cosf(angle));
+		angle += step;
+		point3.x = point1.x + (a_fRadius * sinf(angle));
+		point3.y = point1.y + (a_fRadius * cosf(angle));
+		angle -= step;
+		AddTri(point2, point3, point1);
+	}
+
+	//loop for second circle base
+	for (float angle = 0.0f; angle < 2.0f*PI; angle += step)
+	{
+		point2.x = point4.x + (a_fRadius*sinf(angle));
+		point2.y = point4.y + (a_fRadius * cosf(angle));
+		point2.z = point4.z;
+		angle += step;
+		point3.x = point4.x + (a_fRadius * sinf(angle));
+		point3.y = point4.y + (a_fRadius * cosf(angle));
+		point3.z = point4.z;
+		angle -= step;
+		AddTri(point3, point2, point4);
+	}
+
+	//loop for sides
+	vector3 point5;
+	vector3 point6;
+	for (float angle = 0.0f; angle < 2.0f*PI; angle += step)
+	{
+		point2.x = point1.x + (a_fRadius*sinf(angle));
+		point2.y = point1.y + (a_fRadius * cosf(angle));
+		point2.z = point1.z;
+		point5 = point2;
+		point5.z = point4.z;
+		angle += step;
+		point3.x = point1.x + (a_fRadius * sinf(angle));
+		point3.y = point1.y + (a_fRadius * cosf(angle));
+		point3.z = point1.z;
+		point6 = point3;
+		point6.z = point4.z;
+		angle -= step;
+		AddQuad(point3, point2, point6,point5);
+	}
 
 	// Adding information about color
 	CompleteMesh(a_v3Color);
