@@ -286,7 +286,21 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	Simplex that might help you [eSATResults] feel free to use it.
 	(eSATResults::SAT_NONE has a value of 0)
 	*/
-
+	vector3 m = glm::cross(GetMaxLocal(), a_pOther->GetMaxLocal());//crossing edges
+	if (m != vector3(0.0f, 0.0f, 0.0f))
+	{
+		//edges not parallel, use m as seperating axis
+	}
+	else
+	{
+		//edges are near parallel, find perpendicular axis
+		vector3 n = glm::cross(GetMaxLocal(),GetMinLocal()-GetMaxLocal());
+		m = glm::cross(GetMaxLocal(), n);
+		if (m != vector3(0.0f, 0.0f, 0.0f))
+		{
+			//use m as seperating axis
+		}
+	}
 	//there is no axis test that separates this two objects
 	return eSATResults::SAT_NONE;
 }

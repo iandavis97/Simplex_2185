@@ -1,6 +1,6 @@
 /*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
-Date: 2017/06
+Programmer: Ian Davis (icd9008@rit.edu)
+Date: 2019/03
 ----------------------------------------------*/
 #ifndef __APPLICATIONCLASS_H_
 #define __APPLICATIONCLASS_H_
