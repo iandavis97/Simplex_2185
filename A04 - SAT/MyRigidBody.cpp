@@ -322,7 +322,7 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	for (int i = 0; i < 3; i++) {
 		ra = e[i];
 		rb = f[0] * AbsR[i][0] + f[1] * AbsR[i][1] + f[2] * AbsR[i][2];
-		if (glm::abs(t[i]) > ra + rb) return eSATResults::SAT_NONE;
+		if (glm::abs(t[i]) > ra + rb) return 1;
 	}
 
 	//test axes L=B0, L=B1, L=B2
@@ -330,56 +330,56 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	{
 		ra = e[0] * AbsR[0][i] + e[1] * AbsR[1][i] + e[2] * AbsR[2][i];
 		rb = f[i];
-		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb) return eSATResults::SAT_NONE;
+		if (glm::abs(t[0] * R[0][i] + t[1] * R[1][i] + t[2] * R[2][i]) > ra + rb) return 1;
 	}
 
 	//test axis L=A0 x B0
 	ra = e[1] * AbsR[2][0] + e[2] * AbsR[1][0];
 	rb = f[1] * AbsR[0][2] + f[2] * AbsR[0][1];
-	if (glm::abs(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[2] * R[1][0] - t[1] * R[2][0]) > ra + rb) return 1;
 
 	//test axis L=A0 x B1
 	ra = e[1] * AbsR[2][1] + e[2] * AbsR[1][1];
 	rb = f[0] * AbsR[0][2] + f[2] * AbsR[0][0];
-	if (glm::abs(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[2] * R[1][1] - t[1] * R[2][1]) > ra + rb) return 1;
 
 	// Test axis L = A0 x B2
 	ra = e[1] * AbsR[2][2] + e[2] * AbsR[1][2];
 	rb = f[0] * AbsR[0][1] + f[1] * AbsR[0][0];
-	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[2] * R[1][2] - t[1] * R[2][2]) > ra + rb) return 1;
 
 	// Test axis L = A1 x B0
 	ra = e[0] * AbsR[2][0] + e[2] * AbsR[0][0];
 	rb = f[1] * AbsR[1][2] + f[2] * AbsR[1][1];
-	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[0] * R[2][0] - t[2] * R[0][0]) > ra + rb) return 1;
 
 	// Test axis L = A1 x B1
 	ra = e[0] * AbsR[2][1] + e[2] * AbsR[0][1];
 	rb = f[0] * AbsR[1][2] + f[2] * AbsR[1][0];
-	if (glm::abs(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[0] * R[2][1] - t[2] * R[0][1]) > ra + rb) return 1;
 
 	// Test axis L = A1 x B2
 	ra = e[0] * AbsR[2][2] + e[2] * AbsR[0][2];
 	rb = f[0] * AbsR[1][1] + f[1] * AbsR[1][0];
-	if (glm::abs(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[0] * R[2][2] - t[2] * R[0][2]) > ra + rb) return 1;
 
 	// Test axis L = A2 x B0
 	ra = e[0] * AbsR[1][0] + e[1] * AbsR[0][0];
 	rb = f[1] * AbsR[2][2] + f[2] * AbsR[2][1];
-	if (glm::abs(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[1] * R[0][0] - t[0] * R[1][0]) > ra + rb) return 1;
 
 	// Test axis L = A2 x B1
 	ra = e[0] * AbsR[1][1] + e[1] * AbsR[0][1];
 	rb = f[0] * AbsR[2][2] + f[2] * AbsR[2][0];
-	if (glm::abs(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[1] * R[0][1] - t[0] * R[1][1]) > ra + rb) return 1;
 
 	// Test axis L = A2 x B2
 	ra = e[0] * AbsR[1][2] + e[1] * AbsR[0][2];
 	rb = f[0] * AbsR[2][1] + f[1] * AbsR[2][0];
-	if (glm::abs(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb) return eSATResults::SAT_NONE;
+	if (glm::abs(t[1] * R[0][2] - t[0] * R[1][2]) > ra + rb) return 1;
 
 	// Since no separating axis is found, the OBBs must be intersecting
-	return 1;
+	return 0;
 
 	//there is no axis test that separates this two objects
 	//return eSATResults::SAT_NONE;
