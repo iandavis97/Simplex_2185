@@ -280,12 +280,12 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	matrix4 R, AbsR;
 	std::vector<vector3>u;//represent this local axes
 	std::vector<vector3>w;//represent other local axes
-	u.push_back(GetModelMatrix()[0] * m_m4ToWorld);
-	u.push_back(GetModelMatrix()[1] * m_m4ToWorld);
-	u.push_back(GetModelMatrix()[2] * m_m4ToWorld);
-	w.push_back(a_pOther->GetModelMatrix()[0] * m_m4ToWorld);
-	w.push_back(a_pOther->GetModelMatrix()[1] * m_m4ToWorld);
-	w.push_back(a_pOther->GetModelMatrix()[2]*m_m4ToWorld);
+	u.push_back(GetModelMatrix()[0]);
+	u.push_back(GetModelMatrix()[1]);
+	u.push_back(GetModelMatrix()[2]);
+	w.push_back(a_pOther->GetModelMatrix()[0]);
+	w.push_back(a_pOther->GetModelMatrix()[1]);
+	w.push_back(a_pOther->GetModelMatrix()[2]);
 	//compute rotation matrix expressing b in a's coordinate frame
 	for (int i = 0; i < 3; i++)
 	{
