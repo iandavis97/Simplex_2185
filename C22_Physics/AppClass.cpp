@@ -23,7 +23,7 @@ void Application::InitVariables(void)
 		m_pEntityMngr->UsePhysicsSolver();
 		//m_pEntityMngr->SetMass(2);
 
-		//m_pEntityMngr->SetMass(i+1);
+		m_pEntityMngr->SetMass(i+1);
 	}
 }
 void Application::Update(void)
