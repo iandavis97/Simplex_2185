@@ -1,6 +1,6 @@
+//https://www.gamedev.net/articles/programming/general-and-gameplay-programming/introduction-to-octrees-r3529/
 #include "MyOctant.h"
 using namespace Simplex;
-
 
 MyOctant::MyOctant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 {
@@ -78,7 +78,12 @@ vector3 Simplex::MyOctant::GetMaxGlobal(void){return m_v3Max;}
 
 bool Simplex::MyOctant::IsColliding(uint a_uRBIndex)
 {
-	return false;
+	bool flag = false;
+	for (int i = 0; i < m_EntityList.size(); i++)
+	{
+		flag=m_pEntityMngr->GetEntity(m_EntityList[i])->IsColliding(m_pEntityMngr->GetEntity(a_uRBIndex));
+	}
+	return flag;
 }
 
 void Simplex::MyOctant::Display(uint a_nIndex, vector3 a_v3Color)
@@ -97,13 +102,17 @@ void Simplex::MyOctant::Display(vector3 a_v3Color)
 
 void Simplex::MyOctant::DisplayLeafs(vector3 a_v3Color)
 {
-
+	for (int i = 0; i < m_lChild.size(); i++)
+	{
+		Display(i,a_v3Color);
+	}
 }
 
 void Simplex::MyOctant::ClearEntityList(void){m_EntityList.clear();}
 
 void Simplex::MyOctant::Subdivide(void)
 {
+
 }
 
 MyOctant * Simplex::MyOctant::GetChild(uint a_nChild){return m_pChild[a_nChild];}
@@ -125,14 +134,47 @@ bool Simplex::MyOctant::ContainsMoreThan(uint a_nEntities)
 
 void Simplex::MyOctant::KillBranches(void)
 {
+
 }
 
 void Simplex::MyOctant::ConstructTree(uint a_nMaxLevel)
 {
+	if (this->IsLeaf())//if leaf node, end
+		return;
+	vector3 dimensions = m_v3Max - m_v3Min;
+	//Check to see if the dimensions of the box are greater than the minimum dimensions
+	if (dimensions.x <= m_fSize && dimensions.y <= m_fSize && dimensions.z <= m_fSize)
+	{
+		return;
+	}
+
+	vector3 halfDimensions = dimensions / 2.0f;
+	m_v3Center = m_v3Min + halfDimensions;
+
+	//create subdived regions for each octant
+	float halfSize = m_fSize / 2.0f;
+	m_pChild[0] = new MyOctant(m_v3Min,halfSize);
+	m_pChild[1] = new MyOctant(vector3(m_v3Center.x,m_v3Min.y,m_v3Min.z),halfSize);
+	m_pChild[2] = new MyOctant(vector3(m_v3Center.x, m_v3Min.y, m_v3Center.z), halfSize);
+	m_pChild[3] = new MyOctant(vector3(m_v3Min.x, m_v3Min.y, m_v3Center.z), halfSize);
+	m_pChild[4] = new MyOctant(vector3(m_v3Center.x, m_v3Center.y, m_v3Min.z), halfSize);
+	m_pChild[5] = new MyOctant(vector3(m_v3Center.x, m_v3Center.y, m_v3Min.z), halfSize);
+	m_pChild[6] = new MyOctant(m_v3Center, halfSize);
+	m_pChild[7] = new MyOctant(vector3(m_v3Center.x, m_v3Center.y, m_v3Center.z), halfSize);
+
+	//list of children
+	for (int i = 0; i < 8; i++)
+		m_lChild.push_back(m_pChild[i]);
+
 }
 
 void Simplex::MyOctant::AssignIDtoEntity(void)
 {
+	for (int i = 0; i < m_EntityList.size(); i++)
+	{
+		String temp = "Entity" + i;
+		m_pEntityMngr->GetEntity(m_EntityList[i])->GenUniqueID(temp);
+	}
 }
 
 uint Simplex::MyOctant::GetOctantCount(void){return m_uOctantCount;}
@@ -175,5 +217,6 @@ void Simplex::MyOctant::Init(void)
 
 void Simplex::MyOctant::ConstructList(void)
 {
+
 }
 
