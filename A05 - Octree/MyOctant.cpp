@@ -7,51 +7,48 @@ uint MyOctant::GetOctantCount(void) { return m_uOctantCount; }
 void Simplex::MyOctant::Init(void)
 {
 	m_uChildren = 0;
-	m_uOctantCount = 0;
-	m_uMaxLevel = 0;
-	m_uIdealEntityCount = 0;
-
-	m_uID = m_uOctantCount;
-	m_uLevel = 0;
-	m_uChildren = 0;
 
 	m_fSize = 0.0f;
-
-	m_pMeshMngr = MeshManager::GetInstance();
-	m_pEntityMngr = MyEntityManager::GetInstance();
+	m_uID = m_uOctantCount;
+	m_uLevel = 0;
 
 	m_v3Center = ZERO_V3;
 	m_v3Min = ZERO_V3;
 	m_v3Max = ZERO_V3;
 
+	m_pMeshMngr = MeshManager::GetInstance();
+	m_pEntityMngr = MyEntityManager::GetInstance();
+
+	m_pRoot = nullptr;
 	m_pParent = nullptr;
-	for (int i = 0; i <8; i++)
+	for (uint i = 0; i <8; i++)
 	{
 		m_pChild[i] = nullptr;
 	}
-
-	m_pRoot = nullptr;
 }
 void Simplex::MyOctant::Swap(MyOctant & other)
 {
-	std::swap(m_uOctantCount, other.m_uOctantCount);
-	std::swap(m_uMaxLevel, other.m_uMaxLevel);
-	std::swap(m_uID, other.m_uID);
-	std::swap(m_uLevel, other.m_uLevel);
 	std::swap(m_uChildren, m_uChildren);
+
 	std::swap(m_fSize, other.m_fSize);
-	m_pMeshMngr = MeshManager::GetInstance();
-	m_pEntityMngr = MyEntityManager::GetInstance();
+	std::swap(m_uID, other.m_uID);
+	std::swap(m_pRoot, other.m_pRoot);
+	std::swap(m_lChild, other.m_lChild);
+
 	std::swap(m_v3Center, other.m_v3Center);
 	std::swap(m_v3Min, other.m_v3Min);
 	std::swap(m_v3Max, other.m_v3Max);
+
+	m_pMeshMngr = MeshManager::GetInstance();
+	m_pEntityMngr = MyEntityManager::GetInstance();
+
+	std::swap(m_uLevel, other.m_uLevel);
 	std::swap(m_pParent, other.m_pParent);
-	for (int i = 0; i < 8; i++)
+	
+	for (uint i = 0; i < 8; i++)
 	{
 		std::swap(m_pChild[i], other.m_pChild[i]);
 	}
-	std::swap(m_pRoot, other.m_pRoot);
-	std::swap(m_lChild, other.m_lChild);
 }
 MyOctant * Simplex::MyOctant::GetParent(void) { return m_pParent; }
 void Simplex::MyOctant::Release(void)
@@ -158,7 +155,7 @@ void Simplex::MyOctant::Display(uint a_nIndex, vector3 a_v3Color)
 	if (m_uID == a_nIndex)
 	{
 		m_pMeshMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4,m_v3Center)*
-		glm::scale(vector3(m_fSize)),a_v3Color,RENDER_WIRE);
+			glm::scale(vector3(m_fSize)),a_v3Color,RENDER_WIRE);
 		return;
 	}
 	for (uint nIndex = 0; nIndex < m_uChildren; nIndex++)
@@ -227,7 +224,7 @@ void Simplex::MyOctant::Subdivide(void)
 
 	for (uint nIndex = 0; nIndex < 8; nIndex++)
 	{
-		m_pChild[nIndex]->m_pRoot - m_pRoot;
+		m_pChild[nIndex]->m_pRoot = m_pRoot;
 		m_pChild[nIndex]->m_pParent = this;
 		m_pChild[nIndex]->m_uLevel = m_uLevel + 1;
 		if (m_pChild[nIndex]->ContainsMoreThan(m_uIdealEntityCount))
@@ -345,7 +342,7 @@ void Simplex::MyOctant::AssignIDtoEntity(void)
 	{
 		m_pChild[nChild]->AssignIDtoEntity();
 	}
-	if (IsLeaf())//if this is a leaf
+	if (IsLeaf()==true)//if this is a leaf
 	{
 		uint nEntities = m_pEntityMngr->GetEntityCount();
 		for (uint nIndex = 0; nIndex < nEntities; nIndex++)
