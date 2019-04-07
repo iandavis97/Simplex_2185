@@ -12,9 +12,9 @@ void Simplex::MyOctant::Init(void)
 	m_uID = m_uOctantCount;
 	m_uLevel = 0;
 
-	m_v3Center = ZERO_V3;
-	m_v3Min = ZERO_V3;
-	m_v3Max = ZERO_V3;
+	m_v3Center = vector3(0.0f);
+	m_v3Min = vector3(0.0f);
+	m_v3Max = vector3(0.0f);
 
 	m_pMeshMngr = MeshManager::GetInstance();
 	m_pEntityMngr = MyEntityManager::GetInstance();
@@ -77,7 +77,7 @@ MyOctant::MyOctant(uint a_nMaxLevel, uint a_nIdealEntityCount)
 	uint nObjects = m_pEntityMngr->GetEntityCount();
 	for (uint i = 0; i < nObjects; i++)
 	{
-		MyEntity* pEntity = m_pEntityMngr->GetEntity();
+		MyEntity* pEntity = m_pEntityMngr->GetEntity(i);
 		MyRigidBody* pRigidBody = pEntity->GetRigidBody();
 		lMinMax.push_back(pRigidBody->GetMinGlobal());
 		lMinMax.push_back(pRigidBody->GetMaxGlobal());
@@ -199,11 +199,11 @@ void Simplex::MyOctant::Subdivide(void)
 	m_pChild[1] = new MyOctant(v3Center, fSizeD);
 
 	//2 bottom right front
-	v3Center.z += fSizeD;
+	v3Center.z -= fSizeD;
 	m_pChild[2] = new MyOctant(v3Center, fSizeD);
 
 	//3 bottom left front
-	v3Center.x += fSizeD;
+	v3Center.x -= fSizeD;
 	m_pChild[3] = new MyOctant(v3Center, fSizeD);
 
 	//4 top left front
